@@ -30,9 +30,6 @@ class ProductManager {
             const parse = await fs.promises.readFile(this.path, "utf-8");
             const consult = JSON.parse(parse);
 
-            const idMax = consult.reduce((maxId, obj) =>
-                obj.id > maxId ? obj.id : maxId
-            );
             const addNewProduct = [
                 ...consult,
                 { ...newProduc, id: idMax.id + 1 },
