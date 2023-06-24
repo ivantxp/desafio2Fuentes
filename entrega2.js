@@ -10,7 +10,7 @@ class ProductManager {
     async getProducts() {
         try {
             let data = await utils.read(this.path);
-            return data?.length > 0 ? data : "no hay registro";
+            return (await data?.length) > 0 ? data : "no hay registro";
         } catch (err) {
             console.log(err);
         }
@@ -71,7 +71,7 @@ class ProductManager {
 
 //pruebas codigo
 const products = new ProductManager("./producto.json");
-console.log(products.getProducts());
+products.getProducts().then((res) => console.log(res));
 
 //console.log(products.getProductById(7));
 
