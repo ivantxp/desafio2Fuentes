@@ -1,49 +1,48 @@
-import { Console } from "console";
+import utils from "./utils.js";
 import fs from "fs";
 
 class ProductManager {
     constructor(filePath) {
         this.path = filePath;
+        this.products = [];
     }
 
-    getProducts() {
-        console.log(this.path);
-        /*        if (this.path === undefined)
-            try {
-                fs.promises.readFile;
-            } catch {
-                (err) => console.log(err);
-            }
-        return this.products; */
+    async getProducts() {
+        try {
+            let data = await utils.read(this.path);
+            return data?.length > 0 ? this.products : "no hay registro";
+        } catch (err) {
+            console.log(err);
+        }
     }
 
     async addProduct(title, description, price, thumbnail, code, stock) {
-        const newProduc = {
-            title: title,
-            description: description,
-            price: price,
-            thumbnail: thumbnail,
-            code: code,
-            stock: stock,
-        };
-        try {
-            const parse = await fs.promises.readFile(this.path, "utf-8");
-            const consult = JSON.parse(parse);
+        if (!title || !description || !price || !thumbnail || !code || !stock) {
+            console.error("a dejado un campo de ingreso vacio en addProductos");
+        } else if (typeof price !== "number" || typeof stock !== "number") {
+            console.error(`error ingreso ${title}`);
+        } else {
+            const newProduc = {
+                title: title,
+                description: description,
+                price: price,
+                thumbnail: thumbnail,
+                code: code,
+                stock: stock,
+            };
 
-            const addNewProduct = [
-                ...consult,
-                { ...newProduc, id: idMax.id + 1 },
-            ];
-            console.log(addNewProduct);
-            await fs.promises.writeFile(
-                this.path,
-                JSON.stringify(addNewProduct)
-            );
-        } catch (error) {
-            fs.promises.writeFile(
-                this.path,
-                `[${JSON.stringify({ id: 0, ...newProduc })}]`
-            );
+            try {
+                let data = await utils.read(this.path);
+                this.products = data?.length > 0 ? data : [];
+            } catch (err) {
+                console.log(err);
+            }
+            this.products.push(newProduc);
+            try {
+                await utils.write(this.path, this.products);
+            } catch (error) {
+                console.log(error);
+            }
         }
     }
 
@@ -59,7 +58,7 @@ class ProductManager {
 }
 
 //pruebas codigo
-const products = new ProductManager("producto.txt");
+const products = new ProductManager("./producto.json");
 console.log(
     products.addProduct(
         "Title 1",
@@ -70,6 +69,17 @@ console.log(
         15
     )
 );
+//console.log(await products.getProducts());
+/* console.log(
+    products.addProduct(
+        "Title 1",
+        "Description 1",
+        40,
+        "sin imag",
+        "coded71",
+        15
+    )
+); */
 
 /* //codigos de prueba ingreso
 products.addProduct("Title 1", "Description 1", 40, "sin imag", "coded71", 15);
