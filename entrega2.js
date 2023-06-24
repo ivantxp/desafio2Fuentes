@@ -10,7 +10,7 @@ class ProductManager {
     async getProducts() {
         try {
             let data = await utils.read(this.path);
-            return data?.length > 0 ? this.products : "no hay registro";
+            return data?.length > 0 ? data : "no hay registro";
         } catch (err) {
             console.log(err);
         }
@@ -22,26 +22,38 @@ class ProductManager {
         } else if (typeof price !== "number" || typeof stock !== "number") {
             console.error(`error ingreso ${title}`);
         } else {
-            const newProduc = {
-                title: title,
-                description: description,
-                price: price,
-                thumbnail: thumbnail,
-                code: code,
-                stock: stock,
-            };
-
             try {
                 let data = await utils.read(this.path);
                 this.products = data?.length > 0 ? data : [];
             } catch (err) {
                 console.log(err);
             }
-            this.products.push(newProduc);
-            try {
-                await utils.write(this.path, this.products);
-            } catch (error) {
-                console.log(error);
+
+            const repit = this.products.some((el) => el.code === code);
+
+            if (repit) {
+                `el codigo "${code}" ya fue ingresado, ingrese uno nuevo`;
+            } else {
+                const x = this.products.length - 1;
+
+                const newProduc = {
+                    id: this.products[x].id + 1,
+                    title: title,
+                    description: description,
+                    price: price,
+                    thumbnail: thumbnail,
+                    code: code,
+                    stock: stock,
+                };
+
+                this.products.push(newProduc);
+                this.products.sort((a, b) => a.id - b.id);
+
+                try {
+                    await utils.write(this.path, this.products);
+                } catch (error) {
+                    console.log(error);
+                }
             }
         }
     }
@@ -59,17 +71,21 @@ class ProductManager {
 
 //pruebas codigo
 const products = new ProductManager("./producto.json");
-console.log(
+console.log(products.getProducts());
+
+//console.log(products.getProductById(7));
+
+/* console.log(
     products.addProduct(
-        "Title 1",
-        "Description 1",
-        40,
+        "Title 8",
+        "Description ss",
+        440,
         "sin imag",
-        "coded71",
+        "7ss8a",
         15
     )
 );
-//console.log(await products.getProducts());
+console.log(await products.getProducts()); */
 /* console.log(
     products.addProduct(
         "Title 1",
