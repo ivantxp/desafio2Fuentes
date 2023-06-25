@@ -10,7 +10,8 @@ class ProductManager {
     async getProducts() {
         try {
             let data = await utils.read(this.path);
-            return (await data?.length) > 0 ? data : "no hay registro";
+            const action = (await data?.length) > 0 ? data : "no hay registro";
+            return action;
         } catch (err) {
             console.log(err);
         }
@@ -32,7 +33,9 @@ class ProductManager {
             const repit = this.products.some((el) => el.code === code);
 
             if (repit) {
-                return `el codigo "${code}" ya fue ingresado, ingrese uno nuevo`;
+                console.log(
+                    `el codigo "${code}" ya fue ingresado, ingrese uno nuevo`
+                );
             } else {
                 const x = this.products.length - 1;
                 const newId =
@@ -82,7 +85,7 @@ class ProductManager {
             this.products = (await data?.length) > 0 ? data : [];
             const targetIndex = this.products.findIndex((el) => el.id === id);
             if (targetIndex !== -1) {
-                this.products[targetIndex] = { id: targetIndex, ...obj };
+                this.products[targetIndex] = { id: id, ...obj };
                 console.log(this.products[targetIndex]);
                 await utils.write(this.path, this.products);
             } else {
@@ -113,49 +116,29 @@ class ProductManager {
 //Preubas
 const products = new ProductManager("./producto.json");
 
+//sin productos
+/* products.getProducts().then((res) => console.log(res)); */
+
+//agregado
 /* products
     .addProduct("Title 4", "Description 4", 40, "sin imag", "a4", 15)
     .then((res) => console.log(res))
-    .catch((err) => console.log(err)); */
+    .catch((err) => console.log(err));
 
-//products.getProducts().then((res) => console.log(res));
+products.getProducts().then((res) => console.log(res)); */
 
-/* products
-    .updateProduct(4, {
-        title: "atum",
-        description: "alimento",
-        price: 500,
-        thumbnail: "thumbnail",
-        code: "aa45",
-        stock: 88,
-    })
-    .then((res) => console.log(res));
+//buscado por id
+/* products.getProductById(2).then((res) => console.log(res)); */
+
+//editado
+/* products.updateProduct(2, {
+    title: "title ",
+    description: "description",
+    price: 50,
+    thumbnail: "thumbnail ediit",
+    code: "code ediit",
+    stock: 80,
+});
  */
-/* console.log(
-    products
-        .getProductById(8)
-        .then((res) => console.log(res))
-        .catch((err) => console.log(err))
-); */
-
-/* console.log(
-    products.addProduct(
-        "Title 8",
-        "Description ss",
-        440,
-        "sin imag",
-        "7ss8a",
-        15
-    )
-);
-console.log(await products.getProducts()); */
-/* console.log(
-    products.addProduct(
-        "Title 1",
-        "Description 1",
-        40,
-        "sin imag",
-        "coded71",
-        15
-    )
-); */
+//borrado
+products.deletProductById(2);
