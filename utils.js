@@ -17,5 +17,13 @@ async function write(file, data) {
         console.log(error);
     }
 }
+async function quit(file) {
+    try {
+        await fs.promises.unlink(file);
+        return true;
+    } catch (err) {
+        console.log(err);
+    }
+}
 
-export default { read, write };
+export default { read, write, quit };
