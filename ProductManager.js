@@ -10,7 +10,7 @@ class ProductManager {
     async getProducts() {
         try {
             let data = await utils.read(this.path);
-            const action = (await data?.length) > 0 ? data : "no hay registro";
+            const action = data?.length > 0 ? data : "no hay registro";
             return action;
         } catch (err) {
             console.log(err);
@@ -67,7 +67,7 @@ class ProductManager {
     async getProductById(id) {
         try {
             let data = await utils.read(this.path);
-            this.products = (await data?.length) > 0 ? data : [];
+            this.products = data?.length > 0 ? data : [];
             const targetID = this.products.find((el) => el.id === id);
             if (targetID !== undefined) {
                 return targetID;
@@ -82,7 +82,7 @@ class ProductManager {
     async updateProduct(id, obj) {
         try {
             let data = await utils.read(this.path);
-            this.products = (await data?.length) > 0 ? data : [];
+            this.products = data?.length > 0 ? data : [];
             const targetIndex = this.products.findIndex((el) => el.id === id);
             if (targetIndex !== -1) {
                 this.products[targetIndex] = { id: id, ...obj };
@@ -97,7 +97,7 @@ class ProductManager {
     }
     async deletProductById(id) {
         let data = await utils.read(this.path);
-        this.products = (await data?.length) > 0 ? data : [];
+        this.products = data?.length > 0 ? data : [];
         const targetIndex = this.products.findIndex((el) => el.id === id);
         if (targetIndex !== -1) {
             let product = this.products[targetIndex];
@@ -117,15 +117,25 @@ class ProductManager {
 const products = new ProductManager("./producto.json");
 
 //sin productos
-/* products.getProducts().then((res) => console.log(res)); */
+/* products.getProducts().then((res) => console.log(res));
+ */
 
 //agregado
+/* let randon = 19;//Math.floor(Math.random() * 10000);
+ */
 /* products
-    .addProduct("Title 4", "Description 4", 40, "sin imag", "a4", 15)
+    .addProduct(
+        "Title " + randon,
+        "Description " + randon,
+        40,
+        "sin imag",
+        "a" + randon,
+        15
+    )
     .then((res) => console.log(res))
-    .catch((err) => console.log(err));
+    .catch((err) => console.log(err)); */
 
-products.getProducts().then((res) => console.log(res)); */
+/* products.getProducts().then((res) => console.log(res)); */
 
 //buscado por id
 /* products.getProductById(2).then((res) => console.log(res)); */
@@ -138,7 +148,7 @@ products.getProducts().then((res) => console.log(res)); */
     thumbnail: "thumbnail ediit",
     code: "code ediit",
     stock: 80,
-});
- */
+}); */
+
 //borrado
-products.deletProductById(2);
+//products.deletProductById(2);
